@@ -50,13 +50,14 @@ TaskManager é uma aplicação full stack para gerenciamento de tarefas, desenvo
    cd TaskManager
 
 2. **Inicie o container do SQL Server**
-
-```bash
-
-  docker-compose up -d sqlserver
+   ```bash
+   docker-compose up -d sqlserver
 
 3. **Execute as migrations para criar o banco**
+   ```bash
+   cd backend/TaskManagerAPI
+   dotnet ef database update
 
-bash
-cd backend/TaskManagerAPI
-dotnet ef database update
+4. **(Opcional) Teste a conexão com o banco**
+   ```bash
+   docker exec -it taskmanager-sqlserver /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P TaskManager@123 -C -Q "SELECT @@VERSION"
