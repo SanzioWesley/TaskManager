@@ -18,12 +18,6 @@ TaskManager é uma aplicação full stack para gerenciamento de tarefas, desenvo
 - ✅ **Fluent API** para configurações avançadas (índices, chaves)
 - ✅ Ambiente de desenvolvimento isolado com **Docker Compose**
 
-### 🚀 Próximas Funcionalidades
-
-- 🔐 Autenticação com JWT
-- 📝 CRUD completo de tarefas
-- 🎨 Frontend em React com TypeScript
-- 🔔 Notificações em tempo real com SignalR
 
 ## 🛠️ Tecnologias Utilizadas
 
