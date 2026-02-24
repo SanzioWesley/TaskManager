@@ -25,6 +25,7 @@ export const deleteTask = async (id: number): Promise<void> => {
     await api.delete(`/tasks/${id}`);
 };
 
+// ✅ ADICIONE esta se for usar:
 export const completeTask = async (id: number): Promise<void> => {
     await api.patch(`/tasks/${id}/complete`);
 };

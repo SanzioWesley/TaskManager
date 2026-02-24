@@ -25,6 +25,7 @@ const TaskList: React.FC = () => {
         }
     };
 
+    // ✅ Função para completar tarefa
     const handleComplete = async (id: number): Promise<void> => {
         try {
             await completeTask(id);
@@ -61,6 +62,7 @@ const TaskList: React.FC = () => {
                             <p>{task.description}</p>
                             <small>Usuário: {task.user?.name || task.userId}</small>
                             <br />
+                            {/* Botão de completar */}
                             <button onClick={() => handleComplete(task.id)} disabled={task.isCompleted}>
                                 {task.isCompleted ? 'Concluída' : 'Concluir'}
                             </button>
