@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 
 const NotFound: React.FC = () => {
     return (
-        <div style={{ textAlign: 'center', padding: '50px' }}>
+        <div className="not-found">
             <h1>404</h1>
             <p>Página não encontrada</p>
-            <Link to="/">Voltar para Home</Link>
+            <Link to="/" className="back-home">Voltar para Home</Link>
         </div>
     );
 };

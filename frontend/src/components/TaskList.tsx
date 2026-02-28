@@ -61,56 +61,34 @@ const TaskList: React.FC = () => {
             {tasks.length === 0 ? (
                 <p>Nenhuma tarefa encontrada</p>
             ) : (
-                <ul>
+                // No lugar do <ul>, use:
+                <div className="task-list">
                     {tasks.map((task) => (
-                        <li key={task.id} style={{
-                            marginBottom: '15px',
-                            padding: '10px',
-                            border: '1px solid #ddd',
-                            borderRadius: '4px',
-                            textDecoration: task.isCompleted ? 'line-through' : 'none',
-                            opacity: task.isCompleted ? 0.7 : 1
-                        }}>
-                            <strong>{task.title}</strong>
-                            <p>{task.description}</p>
-                            <small>Vencimento: {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'Sem data'}</small>
-                            <br />
-                            <small>Usuário: {task.user?.name || task.userId}</small>
-
-                            <div style={{ marginTop: '10px' }}>
+                        <div key={task.id} className={`task-card ${task.isCompleted ? 'completed' : ''}`}>
+                            <div className="task-title">{task.title}</div>
+                            <div className="task-description">{task.description}</div>
+                            <div className="task-meta">
+                                <span className="task-user">{task.user?.name || `User ${task.userId}`}</span>
+                                <span>{task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'Sem data'}</span>
+                            </div>
+                            <div className="task-actions">
                                 <button
+                                    className="btn-complete"
                                     onClick={() => handleToggleComplete(task.id, task.isCompleted)}
                                     disabled={task.isCompleted}
-                                    style={{
-                                        padding: '5px 10px',
-                                        marginRight: '5px',
-                                        backgroundColor: task.isCompleted ? '#6c757d' : '#28a745',
-                                        color: 'white',
-                                        border: 'none',
-                                        borderRadius: '4px',
-                                        cursor: task.isCompleted ? 'not-allowed' : 'pointer'
-                                    }}
                                 >
                                     {task.isCompleted ? 'Concluída' : 'Concluir'}
                                 </button>
-
                                 <button
+                                    className="btn-delete"
                                     onClick={() => handleDelete(task.id)}
-                                    style={{
-                                        padding: '5px 10px',
-                                        backgroundColor: '#dc3545',
-                                        color: 'white',
-                                        border: 'none',
-                                        borderRadius: '4px',
-                                        cursor: 'pointer'
-                                    }}
                                 >
                                     Deletar
                                 </button>
                             </div>
-                        </li>
+                        </div>
                     ))}
-                </ul>
+                </div>
             )}
         </div>
     );

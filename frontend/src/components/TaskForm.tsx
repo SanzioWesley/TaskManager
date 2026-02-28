@@ -40,50 +40,36 @@ const TaskForm: React.FC<TaskFormProps> = ({ userId, onTaskCreated }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit} style={{ marginBottom: '20px', padding: '20px', border: '1px solid #ccc' }}>
-            <h3>Nova Tarefa</h3>
+        <form onSubmit={handleSubmit} className="task-form">
+            <h3>➕ Nova Tarefa</h3>
 
-            <div style={{ marginBottom: '10px' }}>
+            <div className="form-group">
                 <input
                     type="text"
-                    placeholder="Título"
+                    placeholder="Título da tarefa"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     required
-                    style={{ width: '100%', padding: '8px' }}
                 />
             </div>
 
-            <div style={{ marginBottom: '10px' }}>
+            <div className="form-group">
                 <textarea
-                    placeholder="Descrição"
+                    placeholder="Descrição (opcional)"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    style={{ width: '100%', padding: '8px', minHeight: '80px' }}
                 />
             </div>
 
-            <div style={{ marginBottom: '10px' }}>
+            <div className="form-group">
                 <input
                     type="datetime-local"
                     value={dueDate}
                     onChange={(e) => setDueDate(e.target.value)}
-                    style={{ width: '100%', padding: '8px' }}
                 />
             </div>
 
-            <button
-                type="submit"
-                disabled={loading}
-                style={{
-                    padding: '10px 20px',
-                    backgroundColor: '#28a745',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: loading ? 'not-allowed' : 'pointer'
-                }}
-            >
+            <button type="submit" disabled={loading} className="btn-submit">
                 {loading ? 'Criando...' : 'Criar Tarefa'}
             </button>
         </form>
