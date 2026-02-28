@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TaskManagerAPI.Data;
 using TaskManagerAPI.Models;
+using TaskManagerAPI.DTOs;
 
 namespace TaskManagerAPI.Controllers
 {
@@ -18,11 +19,24 @@ namespace TaskManagerAPI.Controllers
 
         // GET: api/tasks
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TaskItem>>> GetTasks()
+        public async Task<ActionResult<IEnumerable<TaskDTO>>> GetTasks()
         {
-            return await _context.Tasks
-                .Include(t => t.User)  // Inclui dados do usuário
+            var tasks = await _context.Tasks
+                .Include(t => t.User)
+                .Select(t => new TaskDTO
+                {
+                    Id = t.Id,
+                    Title = t.Title,
+                    Description = t.Description,
+                    CreatedAt = t.CreatedAt,
+                    DueDate = t.DueDate,
+                    IsCompleted = t.IsCompleted,
+                    UserId = t.UserId,
+                    UserName = t.User.Name
+                })
                 .ToListAsync();
+
+            return tasks;
         }
 
         // GET: api/tasks/5

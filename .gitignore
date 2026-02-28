@@ -54,6 +54,7 @@ dist/
 .env.development.local
 .env.test.local
 .env.production.local
+iniciar-dev.ps1
 
 # Arquivos de cobertura de teste
 coverage/

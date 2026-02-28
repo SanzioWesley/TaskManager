@@ -26,23 +26,29 @@ const TaskList: React.FC = () => {
     };
 
     // ✅ Função para completar tarefa
-    const handleComplete = async (id: number): Promise<void> => {
+    const handleToggleComplete = async (id: number, currentStatus: boolean) => {
         try {
-            await completeTask(id);
-            await loadTasks(); // Recarrega a lista
-        } catch (err) {
-            setError('Erro ao completar tarefa');
+            if (!currentStatus) {
+                await completeTask(id);
+            }
+            await loadTasks();
+        } catch (error) {
+            setError('Erro ao atualizar tarefa');
+            console.error(error);
         }
     };
 
-    const handleDelete = async (id: number): Promise<void> => {
-        if (window.confirm('Tem certeza?')) {
-            try {
-                await deleteTask(id);
-                await loadTasks();
-            } catch (err) {
-                setError('Erro ao deletar tarefa');
-            }
+    const handleDelete = async (id: number) => {
+        if (!window.confirm('Tem certeza que deseja deletar esta tarefa?')) {
+            return;
+        }
+
+        try {
+            await deleteTask(id);
+            await loadTasks(); // Recarrega a lista
+        } catch (error) {
+            setError('Erro ao deletar tarefa');
+            console.error(error);
         }
     };
 
@@ -57,16 +63,51 @@ const TaskList: React.FC = () => {
             ) : (
                 <ul>
                     {tasks.map((task) => (
-                        <li key={task.id} style={{ textDecoration: task.isCompleted ? 'line-through' : 'none' }}>
+                        <li key={task.id} style={{
+                            marginBottom: '15px',
+                            padding: '10px',
+                            border: '1px solid #ddd',
+                            borderRadius: '4px',
+                            textDecoration: task.isCompleted ? 'line-through' : 'none',
+                            opacity: task.isCompleted ? 0.7 : 1
+                        }}>
                             <strong>{task.title}</strong>
                             <p>{task.description}</p>
-                            <small>Usuário: {task.user?.name || task.userId}</small>
+                            <small>Vencimento: {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'Sem data'}</small>
                             <br />
-                            {/* Botão de completar */}
-                            <button onClick={() => handleComplete(task.id)} disabled={task.isCompleted}>
-                                {task.isCompleted ? 'Concluída' : 'Concluir'}
-                            </button>
-                            <button onClick={() => handleDelete(task.id)}>Deletar</button>
+                            <small>Usuário: {task.user?.name || task.userId}</small>
+
+                            <div style={{ marginTop: '10px' }}>
+                                <button
+                                    onClick={() => handleToggleComplete(task.id, task.isCompleted)}
+                                    disabled={task.isCompleted}
+                                    style={{
+                                        padding: '5px 10px',
+                                        marginRight: '5px',
+                                        backgroundColor: task.isCompleted ? '#6c757d' : '#28a745',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '4px',
+                                        cursor: task.isCompleted ? 'not-allowed' : 'pointer'
+                                    }}
+                                >
+                                    {task.isCompleted ? 'Concluída' : 'Concluir'}
+                                </button>
+
+                                <button
+                                    onClick={() => handleDelete(task.id)}
+                                    style={{
+                                        padding: '5px 10px',
+                                        backgroundColor: '#dc3545',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '4px',
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    Deletar
+                                </button>
+                            </div>
                         </li>
                     ))}
                 </ul>
@@ -74,5 +115,7 @@ const TaskList: React.FC = () => {
         </div>
     );
 };
+
+
 
 export default TaskList;
