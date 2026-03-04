@@ -61,7 +61,6 @@ const TaskList: React.FC = () => {
             {tasks.length === 0 ? (
                 <p>Nenhuma tarefa encontrada</p>
             ) : (
-                // No lugar do <ul>, use:
                 <div className="task-list">
                     {tasks.map((task) => (
                         <div key={task.id} className={`task-card ${task.isCompleted ? 'completed' : ''}`}>

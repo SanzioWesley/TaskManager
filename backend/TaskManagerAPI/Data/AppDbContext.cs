@@ -1,33 +1,31 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using TaskManagerAPI.Models;
 
 namespace TaskManagerAPI.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<User, Role, int>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options)
-       : base(options)
+            : base(options)
         {
         }
 
-        public DbSet<User> Users { get; set; }
         public DbSet<TaskItem> Tasks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Índice único para email
-            modelBuilder.Entity<User>()
-                .HasIndex(u => u.Email)
-                .IsUnique();
-
-            // CORREÇÃO: Configurar relacionamento corretamente
+            // Configurar relacionamento Task -> User
             modelBuilder.Entity<TaskItem>()
-                .HasOne(t => t.User)  // TaskItem tem uma propriedade User
-                .WithMany(u => u.Tasks)  // User tem uma coleção Tasks
-                .HasForeignKey(t => t.UserId)  // Chave estrangeira
+                .HasOne(t => t.User)
+                .WithMany(u => u.Tasks)
+                .HasForeignKey(t => t.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // Configurar índices e constraints do Identity (já vem por padrão)
         }
     }
 }

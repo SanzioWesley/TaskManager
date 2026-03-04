@@ -3,9 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using TaskManagerAPI.Data;
 using TaskManagerAPI.Models;
 using TaskManagerAPI.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TaskManagerAPI.Controllers
 {
+    [Authorize] // <-- altenticacao JWT
     [Route("api/[controller]")]
     [ApiController]
     public class TasksController : ControllerBase

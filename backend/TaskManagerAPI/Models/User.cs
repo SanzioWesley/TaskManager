@@ -1,27 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace TaskManagerAPI.Models
 {
-    public class User
+    public class User : IdentityUser<int>
     {
-        [Key]
-        public int Id { get; set; }
-
-        [Required]
-        [StringLength(100)]
-        public string Name { get; set; } = string.Empty;  // <- Valor padrão
-
-        [Required]
-        [StringLength(100)]
-        [EmailAddress]
-        public string Email { get; set; } = string.Empty;  // <- Valor padrão
-
-        [Required]
-        public string PasswordHash { get; set; } = string.Empty;  // <- Valor padrão
-
+        public string Name { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        // Inicializa a coleção para evitar null
+        // Relacionamento: Um usuário pode ter várias tarefas
         public ICollection<TaskItem> Tasks { get; set; } = new List<TaskItem>();
     }
 }
