@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import { createTask } from '../services/taskService';
+import { getUser } from '../services/authService';
 
 interface TaskFormProps {
-    userId: number;
     onTaskCreated: () => void;
 }
 
-const TaskForm: React.FC<TaskFormProps> = ({ userId, onTaskCreated }) => {
+const TaskForm: React.FC<TaskFormProps> = ({ onTaskCreated }) => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [dueDate, setDueDate] = useState('');
     const [loading, setLoading] = useState(false);
+
+    const user = getUser();
+    const userId = user?.id;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -24,12 +27,9 @@ const TaskForm: React.FC<TaskFormProps> = ({ userId, onTaskCreated }) => {
                 userId
             });
 
-            // Limpar formulário
             setTitle('');
             setDescription('');
             setDueDate('');
-
-            // Recarregar lista
             onTaskCreated();
         } catch (error) {
             console.error('Erro ao criar tarefa:', error);
