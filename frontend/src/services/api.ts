@@ -4,9 +4,6 @@ import { getToken, logout } from './authService';
 const api = axios.create({
   baseURL: 'https://localhost:7138/api',
   timeout: 10000,
-  httpsAgent: {
-    rejectUnauthorized: false
-  }
 });
 
 // Interceptor para adicionar token em todas as requisições
