@@ -31,6 +31,7 @@ public class TasksTests : IClassFixture<WebApplicationFactory<Program>>
 
         var json = await loginResponse.Content.ReadAsStringAsync();
         using var document = JsonDocument.Parse(json);
+
         var token = document.RootElement.GetProperty("token").GetString();
 
         token.Should().NotBeNullOrEmpty();
@@ -41,5 +42,16 @@ public class TasksTests : IClassFixture<WebApplicationFactory<Program>>
         var response = await _client.GetAsync("/api/tasks");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task GetTasks_SemToken_DeveRetornar401()
+    {
+
+        // Não adiciona token no header
+        var getResponse = await _client.GetAsync("/api/tasks");
+
+        // Deve retornar não autorizado
+        getResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
 }
