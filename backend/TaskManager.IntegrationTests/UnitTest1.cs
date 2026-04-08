@@ -54,4 +54,21 @@ public class TasksTests : IClassFixture<WebApplicationFactory<Program>>
         // Deve retornar não autorizado
         getResponse.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
+
+    [Fact]
+    public async Task GetTasks_ComTokenInvalido_DeveRetornar401()
+    {
+        //Token falso
+        var tokenInvalido = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.123456";
+
+        _client.DefaultRequestHeaders.Authorization = 
+            new AuthenticationHeaderValue("Bearer", tokenInvalido);
+
+
+        var response = await _client.GetAsync("/api/tasks");
+
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+
 }
