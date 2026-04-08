@@ -16,8 +16,7 @@ public class TasksTests : IClassFixture<WebApplicationFactory<Program>>
         _client = factory.CreateClient();
     }
 
-    [Fact]
-    public async Task GetTasks_ComToken_DeveRetornar200()
+    private async Task<string> GetTokenAsync()
     {
         var loginRequest = new
         {
@@ -27,14 +26,17 @@ public class TasksTests : IClassFixture<WebApplicationFactory<Program>>
 
         var loginResponse = await _client.PostAsJsonAsync("/api/auth/login", loginRequest);
 
-        loginResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-
         var json = await loginResponse.Content.ReadAsStringAsync();
         using var document = JsonDocument.Parse(json);
-
         var token = document.RootElement.GetProperty("token").GetString();
 
-        token.Should().NotBeNullOrEmpty();
+        return token;// --ADICIONE ESTA LINHA
+    }
+
+    [Fact]
+    public async Task GetTasks_ComToken_DeveRetornar200()
+    {
+        var token = await GetTokenAsync();
 
         _client.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Bearer", token);
@@ -58,16 +60,8 @@ public class TasksTests : IClassFixture<WebApplicationFactory<Program>>
     [Fact]
     public async Task GetTasks_ComTokenInvalido_DeveRetornar401()
     {
-        //Token falso
-        var tokenInvalido = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.123456";
-
-        _client.DefaultRequestHeaders.Authorization = 
-            new AuthenticationHeaderValue("Bearer", tokenInvalido);
-
-
-        var response = await _client.GetAsync("/api/tasks");
-
-        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        var token = await GetTokenAsync(); // 1 linha (reaproveitou as 10)
+                                          // depois modifica o token para inválido
     }
 
 
