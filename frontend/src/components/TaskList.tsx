@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import type { Task } from '../types';
 import { getTasks, deleteTask, completeTask } from '../services/taskService';
 
+
 const TaskList: React.FC = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const [filter, setFilter] = useState<'all' | 'pending' | 'completed'>('all');
 
     useEffect(() => {
         loadTasks();
@@ -52,17 +54,29 @@ const TaskList: React.FC = () => {
         }
     };
 
+    const filteredTasks = tasks.filter(task => {
+        if (filter === 'pending') return !task.isCompleted;
+        if (filter === 'completed') return task.isCompleted;
+        return true;
+    });
+
     if (loading) return <div>Carregando...</div>;
     if (error) return <div>Erro: {error}</div>;
 
     return (
         <div>
+            <div className="filter-buttons">
+                <button onClick={() => setFilter('all')}>Todas</button>
+                <button onClick={() => setFilter('pending')}>Pendentes</button>
+                <button onClick={() => setFilter('completed')}>Concluídas</button>
+            </div>
+
             <h2>Lista de Tarefas</h2>
-            {tasks.length === 0 ? (
+            {filteredTasks.length === 0 ? (
                 <p>Nenhuma tarefa encontrada</p>
             ) : (
                 <div className="task-list">
-                    {tasks.map((task) => (
+                    {filteredTasks.map((task) => (
                         <div key={task.id} className={`task-card ${task.isCompleted ? 'completed' : ''}`}>
                             <div className="task-title">{task.title}</div>
                             <div className="task-description">{task.description}</div>
