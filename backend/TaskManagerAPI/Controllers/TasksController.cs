@@ -4,6 +4,8 @@ using TaskManagerAPI.Data;
 using TaskManagerAPI.Models;
 using TaskManagerAPI.DTOs;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+
 
 namespace TaskManagerAPI.Controllers
 {
@@ -34,7 +36,7 @@ namespace TaskManagerAPI.Controllers
                     DueDate = t.DueDate,
                     IsCompleted = t.IsCompleted,
                     UserId = t.UserId,
-                    UserName = t.User.Name
+                    //UserName = t.User.Name
                 })
                 .ToListAsync();
 
@@ -71,13 +73,24 @@ namespace TaskManagerAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<TaskItem>> PostTask(TaskItem task)
         {
+            // Pega o UserId do token JWT
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized("Usuário não identificado");
+            }
+
+            var userId = int.Parse(userIdClaim.Value);
+
             // Verificar se o usuário existe
-            var user = await _context.Users.FindAsync(task.UserId);
+            var user = await _context.Users.FindAsync(userId);
             if (user == null)
             {
                 return BadRequest("Usuário não encontrado");
             }
 
+            // Força o userId do token (ignora o que veio do frontend)
+            task.UserId = userId;
             task.CreatedAt = DateTime.UtcNow;
 
             _context.Tasks.Add(task);

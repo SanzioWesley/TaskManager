@@ -20,5 +20,4 @@ export interface TaskInput {
     title: string;
     description: string;
     dueDate?: string;
-    userId: number;
 }

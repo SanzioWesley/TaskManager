@@ -24,7 +24,6 @@ const TaskForm: React.FC<TaskFormProps> = ({ onTaskCreated }) => {
                 title,
                 description,
                 dueDate: dueDate || undefined,
-                userId
             });
 
             setTitle('');
