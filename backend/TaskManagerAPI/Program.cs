@@ -1,38 +1,42 @@
-using System.Text;
+﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using TaskManagerAPI.Application.Interfaces;
+using TaskManagerAPI.Application.Services;
 using TaskManagerAPI.Data;
+//using TaskManagerAPI.Infrastructure.Data;
+using TaskManagerAPI.Infrastructure.Services;
 using TaskManagerAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configurar DbContext
+// 🔌 DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Configurar Identity
+// 🔐 Identity
 builder.Services.AddIdentity<User, Role>(options =>
 {
-    // Configura��es de senha
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = true;
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequiredLength = 6;
 
-    // Configura��es de usu�rio
     options.User.RequireUniqueEmail = true;
+
     options.Lockout.MaxFailedAccessAttempts = 5;
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
 })
 .AddEntityFrameworkStores<AppDbContext>()
 .AddDefaultTokenProviders();
 
-// Configurar JWT
-var key = Encoding.ASCII.GetBytes("SUA-CHAVE-SECRETA-AQUI-DEVE-SER-MUITO-LONGA-E-SEGURA-1234567890");
+// 🔑 JWT (USANDO appsettings.json)
+var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!);
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -42,27 +46,33 @@ builder.Services.AddAuthentication(options =>
 {
     options.RequireHttpsMetadata = true;
     options.SaveToken = true;
+
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(key),
-        ValidateIssuer = false,
-        ValidateAudience = false,
+
+        ValidateIssuer = true,
+        ValidateAudience = true,
+
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+
         ValidateLifetime = true,
         ClockSkew = TimeSpan.Zero
     };
 
-    // Eventos para debug (opcional)
+    // (opcional) logs de debug
     options.Events = new JwtBearerEvents
     {
         OnAuthenticationFailed = context =>
         {
-            Console.WriteLine($"Token inv�lido: {context.Exception.Message}");
+            Console.WriteLine($"❌ Token inválido: {context.Exception.Message}");
             return Task.CompletedTask;
         },
         OnTokenValidated = context =>
         {
-            Console.WriteLine("Token v�lido!");
+            Console.WriteLine("✅ Token válido!");
             return Task.CompletedTask;
         }
     };
@@ -70,36 +80,44 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-// Configurar CORS
+// 🧠 Dependency Injection (SEUS SERVICES)
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+
+// 🌐 CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:5173")
-                  .AllowAnyHeader()
-                  .AllowAnyMethod()
-                  .AllowCredentials();
-        });
+    options.AddPolicy("AllowReactApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
 });
 
+// 🎮 Controllers
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
-        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.ReferenceHandler =
+            System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
     });
 
 builder.Services.AddEndpointsApiExplorer();
 
-// Configurar Swagger com suporte a JWT
+// 📘 Swagger + JWT
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "TaskManager API", Version = "v1" });
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "TaskManager API",
+        Version = "v1"
+    });
 
-    // Configurar JWT no Swagger
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Description = "JWT Authorization header usando o esquema Bearer. Exemplo: \"Bearer {token}\"",
+        Description = "Digite: Bearer {seu token}",
         Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,
@@ -124,7 +142,7 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
+// 🚀 Pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -132,15 +150,15 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseCors("AllowReactApp");
-app.UseAuthentication(); // IMPORTANTE: Deve vir antes do UseAuthorization
+
+// ⚠️ ORDEM IMPORTA
+app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
-
-
 
 app.Run();
 
-
 public partial class Program { }
-
