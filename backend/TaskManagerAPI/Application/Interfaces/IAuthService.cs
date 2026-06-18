@@ -1,4 +1,4 @@
-﻿using TaskManagerAPI.DTOs;
+﻿using TaskManagerAPI.DTOs.Auth;
 
 namespace TaskManagerAPI.Application.Interfaces
 {

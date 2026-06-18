@@ -4,9 +4,9 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using TaskManagerAPI.DTOs;
 using TaskManagerAPI.Models;
 using TaskManagerAPI.Application.Interfaces;
+using TaskManagerAPI.DTOs.Auth;
 
 [ApiController]
 [Route("api/[controller]")]
