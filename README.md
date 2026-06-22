@@ -1,57 +1,180 @@
-# 📋 TaskManager - Full Stack Application
+# 📋 TaskManager - Full Stack Task Management Application
 
-![.NET 8](https://img.shields.io/badge/.NET-8.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
-![React](https://img.shields.io/badge/React-18.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)
-![SQL Server](https://img.shields.io/badge/SQL%20Server-2022-CC2927?style=for-the-badge&logo=microsoft-sql-server&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![.NET 8](https://img.shields.io/badge/.NET-8.0-512BD4?style=for-the-badge\&logo=dotnet\&logoColor=white)
+![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge\&logo=react\&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge\&logo=typescript\&logoColor=white)
+![SQL Server](https://img.shields.io/badge/SQL%20Server-2022-CC2927?style=for-the-badge\&logo=microsoft-sql-server\&logoColor=white)
 
-## 📌 Sobre o Projeto
+# 📌 Sobre o Projeto
 
-TaskManager é uma aplicação full stack para gerenciamento de tarefas, desenvolvida com foco em **boas práticas** e **arquitetura limpa**. O objetivo é demonstrar proficiência em desenvolvimento web moderno.
+TaskManager é uma aplicação Full Stack para gerenciamento de tarefas desenvolvida utilizando ASP.NET Core Web API e React.
 
-### ✨ Funcionalidades Implementadas
+O projeto foi criado com o objetivo de praticar conceitos utilizados no mercado de desenvolvimento de software, incluindo:
 
-- ✅ Backend em .NET 8 com **Entity Framework Core** (Code First)
-- ✅ Banco de dados **SQL Server** rodando em container Docker
-- ✅ Modelagem de domínio com **relacionamentos** (User 1:N Tasks)
-- ✅ **Migrations** para versionamento do esquema do banco
-- ✅ **Fluent API** para configurações avançadas (índices, chaves)
-- ✅ Ambiente de desenvolvimento isolado com **Docker Compose**
+* Arquitetura em camadas
+* ASP.NET Identity
+* Autenticação com JWT
+* Entity Framework Core
+* SQL Server
+* React com TypeScript
+* Dependency Injection
+* Boas práticas de organização de código
 
+---
 
-## 🛠️ Tecnologias Utilizadas
+# ✨ Funcionalidades
 
-| Tecnologia | Versão | Finalidade |
-|------------|--------|------------|
-| .NET | 8.0 | API Backend |
-| Entity Framework Core | 8.0 | ORM e migrations |
-| SQL Server | 2022 | Banco de dados |
-| Docker | 24.0+ | Containerização |
-| React (em breve) | 18.0 | Frontend |
+## 🔐 Autenticação
 
-## 📦 Como Executar o Projeto
+* ✅ Registro de usuários
+* ✅ Login com JWT
+* ✅ ASP.NET Identity
+* ✅ Controle de acesso por usuário autenticado
 
-### Pré-requisitos
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- [Git](https://git-scm.com/)
+## 📝 Gerenciamento de Tarefas
 
-### Passo a Passo
+* ✅ Criar tarefas
+* ✅ Listar tarefas
+* ✅ Editar tarefas
+* ✅ Excluir tarefas
+* ✅ Marcar tarefas como concluídas
 
-1. **Clone o repositório**
-   ```bash
-   git clone https://github.com/SanzioWesley/TaskManager.git
-   cd TaskManager
+## 🏗️ Arquitetura
 
-2. **Inicie o container do SQL Server**
-   ```bash
-   docker-compose up -d sqlserver
+* ✅ Separação em camadas (Application e Infrastructure)
+* ✅ Services e Interfaces
+* ✅ DTOs organizados por funcionalidade
+* ✅ Injeção de Dependência
+* ✅ Entity Framework Core (Code First)
 
-3. **Execute as migrations para criar o banco**
-   ```bash
-   cd backend/TaskManagerAPI
-   dotnet ef database update
+---
 
-4. **(Opcional) Teste a conexão com o banco**
-   ```bash
-   docker exec -it taskmanager-sqlserver /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P TaskManager@123 -C -Q "SELECT @@VERSION"
+# 🛠️ Tecnologias Utilizadas
+
+## Backend
+
+* ASP.NET Core 8
+* Entity Framework Core 8
+* ASP.NET Identity
+* JWT Authentication
+* SQL Server
+
+## Frontend
+
+* React
+* TypeScript
+* Axios
+
+---
+
+# 📂 Estrutura do Projeto
+
+```text
+TaskManager
+│
+├── backend
+│   └── TaskManagerAPI
+│       ├── Application
+│       │   ├── Interfaces
+│       │   └── Services
+│       │
+│       ├── Infrastructure
+│       │   ├── Interfaces
+│       │   └── Services
+│       │
+│       ├── Controllers
+│       ├── DTOs
+│       │   ├── Auth
+│       │   ├── Tasks
+│       │   └── Users
+│       │
+│       ├── Models
+│       └── Data
+│
+└── frontend
+    └── taskmanager-frontend
+```
+
+---
+
+# 🚀 Como Executar o Projeto
+
+## Pré-requisitos
+
+* .NET 8 SDK
+* SQL Server
+* Node.js
+* Git
+
+---
+
+## Backend
+
+```bash
+cd backend/TaskManagerAPI
+
+dotnet restore
+
+dotnet ef database update
+
+dotnet run
+```
+
+A API estará disponível em:
+
+```text
+https://localhost:7138
+```
+
+---
+
+## Frontend
+
+```bash
+cd frontend/taskmanager-frontend
+
+npm install
+
+npm run dev
+```
+
+O frontend estará disponível em:
+
+```text
+http://localhost:5173
+```
+
+---
+
+# 🎯 Conceitos Praticados
+
+* ASP.NET Core Web API
+* Entity Framework Core
+* SQL Server
+* ASP.NET Identity
+* JWT Authentication
+* React
+* TypeScript
+* Dependency Injection
+* Arquitetura em Camadas
+* CRUD Completo
+
+---
+
+# 📈 Próximos Passos
+
+* [ ] Testes de Integração
+* [ ] Tratamento global de exceções
+* [ ] Logs estruturados
+* [ ] Refresh Token
+* [ ] Deploy da API
+* [ ] Deploy do Frontend
+* [ ] CI/CD com GitHub Actions
+
+---
+
+# 👨‍💻 Autor
+
+**Sanzio Wesley Rodrigues dos Santos**
+
+GitHub: https://github.com/SanzioWesley
