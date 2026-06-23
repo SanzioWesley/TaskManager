@@ -5,7 +5,7 @@ using TaskManagerAPI.Models;
 using TaskManagerAPI.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-
+using TaskManagerAPI.DTOs.Tasks;
 
 namespace TaskManagerAPI.Controllers
 {
@@ -23,11 +23,11 @@ namespace TaskManagerAPI.Controllers
 
         // GET: api/tasks
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TaskDTO>>> GetTasks()
+        public async Task<ActionResult<IEnumerable<TaskDto>>> GetTasks()
         {
             var tasks = await _context.Tasks
                 .Include(t => t.User)
-                .Select(t => new TaskDTO
+                .Select(t => new TaskDto
                 {
                     Id = t.Id,
                     Title = t.Title,
