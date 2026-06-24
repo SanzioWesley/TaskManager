@@ -7,7 +7,6 @@ using Microsoft.OpenApi.Models;
 using TaskManagerAPI.Application.Interfaces;
 using TaskManagerAPI.Application.Services;
 using TaskManagerAPI.Data;
-//using TaskManagerAPI.Infrastructure.Data;
 using TaskManagerAPI.Infrastructure.Services;
 using TaskManagerAPI.Models;
 
@@ -83,6 +82,7 @@ builder.Services.AddAuthorization();
 // 🧠 Dependency Injection (SEUS SERVICES)
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<ITaskService, TaskService>();
 
 // 🌐 CORS
 builder.Services.AddCors(options =>

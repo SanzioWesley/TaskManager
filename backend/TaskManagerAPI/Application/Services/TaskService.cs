@@ -1,6 +1,7 @@
-﻿using TaskManagerAPI.Application.Interfaces;
-using TaskManagerAPI.DTOs.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+using TaskManagerAPI.Application.Interfaces;
 using TaskManagerAPI.Data;
+using TaskManagerAPI.DTOs.Tasks;
 
 namespace TaskManagerAPI.Application.Services
 {
@@ -13,10 +14,20 @@ namespace TaskManagerAPI.Application.Services
             _context = context;
         }
 
-        public Task<IEnumerable<TaskDto>> GetAllAsync()
+        public async Task<IEnumerable<TaskDto>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Tasks
+                .Select(t => new TaskDto
+                {
+                    Id = t.Id,
+                    Title = t.Title,
+                    Description = t.Description,
+                    CreatedAt = t.CreatedAt,
+                    DueDate = t.DueDate,
+                    IsCompleted = t.IsCompleted,
+                    UserId = t.UserId
+                })
+                .ToListAsync();
         }
     }
-    
 }

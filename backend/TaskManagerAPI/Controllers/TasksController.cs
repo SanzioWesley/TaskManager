@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TaskManagerAPI.Data;
-using TaskManagerAPI.Models;
-using TaskManagerAPI.DTOs;
-using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using TaskManagerAPI.Application.Interfaces;
+using TaskManagerAPI.Data;
+using TaskManagerAPI.DTOs;
 using TaskManagerAPI.DTOs.Tasks;
+using TaskManagerAPI.Models;
 
 namespace TaskManagerAPI.Controllers
 {
@@ -15,32 +16,21 @@ namespace TaskManagerAPI.Controllers
     public class TasksController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly ITaskService _taskService;
 
-        public TasksController(AppDbContext context)
+
+        public TasksController(AppDbContext context, ITaskService taskService)
         {
             _context = context;
+            _taskService = taskService;
         }
 
         // GET: api/tasks
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TaskDto>>> GetTasks()
         {
-            var tasks = await _context.Tasks
-                .Include(t => t.User)
-                .Select(t => new TaskDto
-                {
-                    Id = t.Id,
-                    Title = t.Title,
-                    Description = t.Description,
-                    CreatedAt = t.CreatedAt,
-                    DueDate = t.DueDate,
-                    IsCompleted = t.IsCompleted,
-                    UserId = t.UserId,
-                    //UserName = t.User.Name
-                })
-                .ToListAsync();
-
-            return tasks;
+            var tasks = await _taskService.GetAllAsync();
+            return Ok(tasks);
         }
 
         // GET: api/tasks/5
