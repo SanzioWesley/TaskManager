@@ -1,159 +1,65 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using TaskManagerAPI.Application.Interfaces;
-using TaskManagerAPI.Data;
-using TaskManagerAPI.DTOs;
 using TaskManagerAPI.DTOs.Tasks;
-using TaskManagerAPI.Models;
 
 namespace TaskManagerAPI.Controllers
 {
-    [Authorize] // <-- altenticacao JWT
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TasksController : ControllerBase
     {
-        private readonly AppDbContext _context;
         private readonly ITaskService _taskService;
 
-
-        public TasksController(AppDbContext context, ITaskService taskService)
+        public TasksController(ITaskService taskService)
         {
-            _context = context;
             _taskService = taskService;
         }
 
-        // GET: api/tasks
+        private int GetUserId() =>
+            int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TaskDto>>> GetTasks()
         {
-            var tasks = await _taskService.GetAllAsync();
-            return Ok(tasks);
+            return Ok(await _taskService.GetAllAsync());
         }
 
-        // GET: api/tasks/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TaskItem>> GetTask(int id)
+        public async Task<ActionResult<TaskDto>> GetTask(int id)
         {
-            var task = await _context.Tasks
-                .Include(t => t.User)
-                .FirstOrDefaultAsync(t => t.Id == id);
-
-            if (task == null)
-            {
-                return NotFound();
-            }
-
-            return task;
+            var task = await _taskService.GetByIdAsync(id, GetUserId());
+            return task == null ? NotFound() : Ok(task);
         }
 
-        // GET: api/tasks/user/5
-        [HttpGet("user/{userId}")]
-        public async Task<ActionResult<IEnumerable<TaskItem>>> GetTasksByUser(int userId)
-        {
-            return await _context.Tasks
-                .Where(t => t.UserId == userId)
-                .Include(t => t.User)
-                .ToListAsync();
-        }
-
-        // POST: api/tasks
         [HttpPost]
-        public async Task<ActionResult<TaskItem>> PostTask(TaskItem task)
+        public async Task<ActionResult<TaskDto>> PostTask(TaskDto dto)
         {
-            // Pega o UserId do token JWT
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
-            if (userIdClaim == null)
-            {
-                return Unauthorized("Usuário não identificado");
-            }
-
-            var userId = int.Parse(userIdClaim.Value);
-
-            // Verificar se o usuário existe
-            var user = await _context.Users.FindAsync(userId);
-            if (user == null)
-            {
-                return BadRequest("Usuário não encontrado");
-            }
-
-            // Força o userId do token (ignora o que veio do frontend)
-            task.UserId = userId;
-            task.CreatedAt = DateTime.UtcNow;
-
-            _context.Tasks.Add(task);
-            await _context.SaveChangesAsync();
-
+            var task = await _taskService.CreateAsync(dto, GetUserId());
             return CreatedAtAction(nameof(GetTask), new { id = task.Id }, task);
         }
 
-        // PUT: api/tasks/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTask(int id, TaskItem task)
+        public async Task<IActionResult> PutTask(int id, TaskDto dto)
         {
-            if (id != task.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(task).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TaskExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            var result = await _taskService.UpdateAsync(id, dto, GetUserId());
+            return result ? NoContent() : NotFound();
         }
 
-        // PATCH: api/tasks/5/complete
-        [HttpPatch("{id}/complete")]
-        public async Task<IActionResult> CompleteTask(int id)
-        {
-            var task = await _context.Tasks.FindAsync(id);
-            if (task == null)
-            {
-                return NotFound();
-            }
-
-            task.IsCompleted = true;
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        // DELETE: api/tasks/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTask(int id)
         {
-            var task = await _context.Tasks.FindAsync(id);
-            if (task == null)
-            {
-                return NotFound();
-            }
-
-            _context.Tasks.Remove(task);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            var result = await _taskService.DeleteAsync(id, GetUserId());
+            return result ? NoContent() : NotFound();
         }
 
-        private bool TaskExists(int id)
+        [HttpPatch("{id}/complete")]
+        public async Task<IActionResult> CompleteTask(int id)
         {
-            return _context.Tasks.Any(e => e.Id == id);
+            var result = await _taskService.ToggleCompleteAsync(id, GetUserId());
+            return result ? NoContent() : NotFound();
         }
     }
 }
