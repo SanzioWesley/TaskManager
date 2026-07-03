@@ -30,7 +30,10 @@ public class AuthController : ControllerBase
         var result = await _authService.Login(model);
 
         if (!result.Success)
-            return Unauthorized(result);
+        {
+            // Garanta que está retornando BadRequest ou Unauthorized com o result
+            return Unauthorized(new { message = result.Message });
+        }
 
         return Ok(result);
     }

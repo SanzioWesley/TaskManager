@@ -23,6 +23,17 @@ namespace TaskManagerAPI.Application.Services
 
         public async Task<AuthResponseDto> Register(RegisterDto model)
         {
+            var existingUser = await _userManager.FindByEmailAsync(model.Email);
+
+            if (existingUser != null)
+            {
+                return new AuthResponseDto
+                {
+                    Success = false,
+                    Message = "Este email já está em uso"
+                };
+            }
+
             var user = new User
             {
                 Name = model.Name,
@@ -31,31 +42,31 @@ namespace TaskManagerAPI.Application.Services
                 CreatedAt = DateTime.UtcNow
             };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var createResult = await _userManager.CreateAsync(user, model.Password);
 
-            if (!result.Succeeded)
+            if (!createResult.Succeeded)
             {
                 return new AuthResponseDto
                 {
                     Success = false,
-                    Message = string.Join(", ", result.Errors.Select(e => e.Description))
+                    Message = string.Join(", ", createResult.Errors.Select(e => e.Description))
                 };
             }
 
-            await _userManager.AddToRoleAsync(user, "User");
+            var roleResult = await _userManager.AddToRoleAsync(user, "User");
 
-            var token = await _tokenService.GenerateToken(user);
-
-            return new AuthResponseDto
+            if (!roleResult.Succeeded)
             {
-                Success = true,
-                Message = "Usuário criado",
-                Token = token,
-                Email = user.Email!,
-                Name = user.Name,
-                UserId = user.Id,
-                Expiration = DateTime.UtcNow.AddHours(2)
-            };
+                await _userManager.DeleteAsync(user);
+
+                return new AuthResponseDto
+                {
+                    Success = false,
+                    Message = "Erro ao associar perfil ao usuário"
+                };
+            }
+
+            return await BuildSuccessResponse(user, "Usuário criado");
         }
 
         public async Task<AuthResponseDto> Login(LoginDto model)
@@ -82,12 +93,17 @@ namespace TaskManagerAPI.Application.Services
                 };
             }
 
+            return await BuildSuccessResponse(user, "Login OK");
+        }
+
+        private async Task<AuthResponseDto> BuildSuccessResponse(User user, string message)
+        {
             var token = await _tokenService.GenerateToken(user);
 
             return new AuthResponseDto
             {
                 Success = true,
-                Message = "Login OK",
+                Message = message,
                 Token = token,
                 Email = user.Email!,
                 Name = user.Name,

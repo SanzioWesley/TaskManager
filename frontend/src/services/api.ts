@@ -13,7 +13,6 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    console.log('➡️ Request:', config.method, config.url);
     return config;
   },
   (error) => {
@@ -21,17 +20,16 @@ api.interceptors.request.use(
   }
 );
 
-// Interceptor para tratar erros de autenticação
+// Interceptor para tratar erros globais
 api.interceptors.response.use(
   (response) => {
-    console.log('⬅️ Response:', response.status);
     return response;
   },
   (error) => {
-    console.error('❌ Response Error:', error.message);
+    // Só redireciona se o erro for 401 E NÃO for na rota de login ou register
+    const isAuthRoute = error.config.url.includes('/auth/login') || error.config.url.includes('/auth/register');
 
-    if (error.response?.status === 401) {
-      // Token expirado ou inválido
+    if (error.response?.status === 401 && !isAuthRoute) {
       logout();
       window.location.href = '/login';
     }

@@ -22,13 +22,27 @@ export interface AuthResponse {
 }
 
 export const login = async (data: LoginData): Promise<AuthResponse> => {
-    const response = await api.post<AuthResponse>('/auth/login', data);
-    return response.data;
+    try {
+        const response = await api.post<AuthResponse>('/auth/login', data);
+        return response.data;
+    } catch (err: any) {
+        if (err.response?.data) {
+            return err.response.data as AuthResponse;
+        }
+        throw err;
+    }
 };
 
 export const register = async (data: RegisterData): Promise<AuthResponse> => {
-    const response = await api.post<AuthResponse>('/auth/register', data);
-    return response.data;
+    try {
+        const response = await api.post<AuthResponse>('/auth/register', data);
+        return response.data;
+    } catch (err: any) {
+        if (err.response?.data) {
+            return err.response.data as AuthResponse;
+        }
+        throw err;
+    }
 };
 
 export const logout = (): void => {

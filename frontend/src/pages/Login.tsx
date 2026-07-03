@@ -34,6 +34,7 @@ const Login: React.FC = () => {
                 setError(response.message || 'Erro ao fazer login');
             }
         } catch (err: any) {
+            console.log("ERRO CAPTURADO:", err); // << ADICIONE ISSO
             setError(err.response?.data?.message || 'Erro ao conectar com o servidor');
         } finally {
             setLoading(false);
