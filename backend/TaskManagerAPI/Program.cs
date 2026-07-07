@@ -1,4 +1,5 @@
 ﻿using TaskManagerAPI.Extensions;
+using TaskManagerAPI.Infrastructure.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 app.UseCors("AllowReactApp");
 app.UseAuthentication();

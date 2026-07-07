@@ -61,5 +61,6 @@ namespace TaskManagerAPI.Controllers
             var result = await _taskService.ToggleCompleteAsync(id, GetUserId());
             return result ? NoContent() : NotFound();
         }
+
     }
 }
