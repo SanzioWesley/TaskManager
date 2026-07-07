@@ -1,5 +1,7 @@
-﻿using TaskManagerAPI.Application.Interfaces;
+﻿using FluentValidation;
+using TaskManagerAPI.Application.Interfaces;
 using TaskManagerAPI.Application.Services;
+using TaskManagerAPI.Application.Validators;
 using TaskManagerAPI.Infrastructure.Services;
 
 namespace TaskManagerAPI.Extensions
@@ -12,6 +14,7 @@ namespace TaskManagerAPI.Extensions
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<ITaskService, TaskService>();
+            services.AddValidatorsFromAssemblyContaining<CreateTaskDtoValidator>();
 
             return services;
         }

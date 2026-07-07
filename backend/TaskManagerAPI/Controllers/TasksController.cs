@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TaskManagerAPI.Application.Interfaces;
@@ -35,8 +36,20 @@ namespace TaskManagerAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<TaskDto>> PostTask(TaskDto dto)
+        public async Task<ActionResult<TaskDto>> PostTask(TaskDto dto, [FromServices] IValidator<TaskDto> validator)
         {
+            // Executa a validação do FluentValidation que você já criou
+            var validationResult = await validator.ValidateAsync(dto);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    errors = validationResult.Errors.Select(e => e.ErrorMessage)
+                });
+            }
+
             var task = await _taskService.CreateAsync(dto, GetUserId());
             return CreatedAtAction(nameof(GetTask), new { id = task.Id }, task);
         }
