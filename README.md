@@ -1,41 +1,47 @@
 # 📝 TaskManager Full-Stack
 
-Um gerenciador de tarefas moderno e seguro, desenvolvido com foco em boas práticas de arquitetura e experiência do usuário.
+Um gerenciador de tarefas moderno e seguro, desenvolvido para facilitar a organização pessoal e o acompanhamento de produtividade, focado em boas práticas de arquitetura e experiência do usuário.
+
+## 📸 Screenshots do Projeto
+
+<p align="center">
+  <img src="https://github.com/SanzioWesley/TaskManager/blob/main/login.png?raw=true" width="45%" alt="Tela de Login" />
+  <img src="https://github.com/SanzioWesley/TaskManager/blob/main/dashboard.png?raw=true" width="45%" alt="Dashboard de Tarefas" />
+</p>
+
+---
 
 ## 🚀 Tecnologias Utilizadas
 
 **Backend:**
-- .NET 8 (ASP.NET Core)
-- Entity Framework Core (SQL Server)
-- JWT (JSON Web Tokens) para Autenticação
-- Middleware Global de Tratamento de Erros
-- Injeção de Dependência organizada com Extension Methods
+- **.NET 8 (ASP.NET Core)**
+- **Entity Framework Core** (SQL Server)
+- **JWT (JSON Web Tokens)** para Autenticação segura
+- **Middleware Global** de tratamento de exceções
+- **Dependency Injection** organizada via Extension Methods
 
 **Frontend:**
-- React.js com TypeScript
-- Hooks (useState, useEffect) e Props avançados
-- Axios para integração com a API
-- CSS moderno e responsivo
+- **React.js** com TypeScript
+- **Hooks & Props** avançados (useEffect, useState)
+- **Axios** para consumo da API REST
+- **CSS Responsivo** com foco em UX
 
-## 💡 Principais Features
-- **Fluxo de Autenticação:** Login e Registro protegidos com JWT.
-- **CRUD Completo:** Criação, Listagem, Edição e Exclusão de tarefas.
-- **Validação Dinâmica:** Formulário inteligente que alterna entre Criação e Edição.
-- **Tratamento de Exceções:** Sistema robusto no backend para capturar erros e responder de forma organizada.
+---
+
+## 💡 Principais Diferenciais
+- **Segurança de Ponta:** Implementação completa de fluxo de login e registro com proteção de rotas via JWT.
+- **CRUD 100% Funcional:** Criação, listagem com filtros, edição dinâmica e exclusão de tarefas.
+- **Arquitetura Limpa:** Separação clara de responsabilidades entre Controllers, Services e Camada de Dados no Backend.
+- **Formulários Inteligentes:** O componente de formulário detecta automaticamente se o usuário deseja criar uma nova tarefa ou editar uma existente.
+
+---
 
 ## 🛠️ Como rodar o projeto localmente
 
-### Backend
-1. Navegue até `backend/TaskManagerAPI`.
-2. Configure a string de conexão do seu SQL Server no `appsettings.json`.
-3. Execute as migrations: `dotnet ef database update`.
-4. Rode a aplicação: `dotnet run`.
-
-### Frontend
-1. Navegue até a pasta do frontend.
-2. Instale as dependências: `npm install`.
-3. Inicie o projeto: `npm start`.
-
----
-## 🧠 Evolução Pessoal
-Este projeto representa minha transição para o desenvolvimento Full-Stack. Aprendi a integrar camadas complexas, gerenciar estados globais no React e garantir a segurança dos dados através do backend.
+### 1. Backend
+- Navegue até `backend/TaskManagerAPI`.
+- Configure sua Connection String no `appsettings.json`.
+- Execute:
+  ```bash
+  dotnet ef database update
+  dotnet run
