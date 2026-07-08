@@ -2,8 +2,13 @@ import React, { useEffect, useState } from 'react';
 import type { Task } from '../types';
 import { getTasks, deleteTask, completeTask } from '../services/taskService';
 
+// 1. Adiciona a interface com onEdit
+interface TaskListProps {
+    onEdit: (task: Task) => void;
+}
 
-const TaskList: React.FC = () => {
+// 2. Componente recebe onEdit como prop
+const TaskList: React.FC<TaskListProps> = ({ onEdit }) => {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -27,7 +32,6 @@ const TaskList: React.FC = () => {
         }
     };
 
-    // ✅ Função para completar tarefa
     const handleToggleComplete = async (id: number, currentStatus: boolean) => {
         try {
             if (!currentStatus) {
@@ -41,13 +45,10 @@ const TaskList: React.FC = () => {
     };
 
     const handleDelete = async (id: number) => {
-        if (!window.confirm('Tem certeza que deseja deletar esta tarefa?')) {
-            return;
-        }
-
+        if (!window.confirm('Tem certeza que deseja deletar esta tarefa?')) return;
         try {
             await deleteTask(id);
-            await loadTasks(); // Recarrega a lista
+            await loadTasks();
         } catch (error) {
             setError('Erro ao deletar tarefa');
             console.error(error);
@@ -92,6 +93,15 @@ const TaskList: React.FC = () => {
                                 >
                                     {task.isCompleted ? 'Concluída' : 'Concluir'}
                                 </button>
+
+                                {/* 3. Botão Editar agora funciona */}
+                                <button
+                                    className="btn-edit"
+                                    onClick={() => onEdit(task)}
+                                >
+                                    Editar
+                                </button>
+
                                 <button
                                     className="btn-delete"
                                     onClick={() => handleDelete(task.id)}
@@ -106,7 +116,5 @@ const TaskList: React.FC = () => {
         </div>
     );
 };
-
-
 
 export default TaskList;
