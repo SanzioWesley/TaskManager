@@ -1,180 +1,41 @@
-# 📋 TaskManager - Full Stack Task Management Application
+# 📝 TaskManager Full-Stack
 
-![.NET 8](https://img.shields.io/badge/.NET-8.0-512BD4?style=for-the-badge\&logo=dotnet\&logoColor=white)
-![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge\&logo=react\&logoColor=black)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge\&logo=typescript\&logoColor=white)
-![SQL Server](https://img.shields.io/badge/SQL%20Server-2022-CC2927?style=for-the-badge\&logo=microsoft-sql-server\&logoColor=white)
+Um gerenciador de tarefas moderno e seguro, desenvolvido com foco em boas práticas de arquitetura e experiência do usuário.
 
-# 📌 Sobre o Projeto
+## 🚀 Tecnologias Utilizadas
 
-TaskManager é uma aplicação Full Stack para gerenciamento de tarefas desenvolvida utilizando ASP.NET Core Web API e React.
+**Backend:**
+- .NET 8 (ASP.NET Core)
+- Entity Framework Core (SQL Server)
+- JWT (JSON Web Tokens) para Autenticação
+- Middleware Global de Tratamento de Erros
+- Injeção de Dependência organizada com Extension Methods
 
-O projeto foi criado com o objetivo de praticar conceitos utilizados no mercado de desenvolvimento de software, incluindo:
+**Frontend:**
+- React.js com TypeScript
+- Hooks (useState, useEffect) e Props avançados
+- Axios para integração com a API
+- CSS moderno e responsivo
 
-* Arquitetura em camadas
-* ASP.NET Identity
-* Autenticação com JWT
-* Entity Framework Core
-* SQL Server
-* React com TypeScript
-* Dependency Injection
-* Boas práticas de organização de código
+## 💡 Principais Features
+- **Fluxo de Autenticação:** Login e Registro protegidos com JWT.
+- **CRUD Completo:** Criação, Listagem, Edição e Exclusão de tarefas.
+- **Validação Dinâmica:** Formulário inteligente que alterna entre Criação e Edição.
+- **Tratamento de Exceções:** Sistema robusto no backend para capturar erros e responder de forma organizada.
 
----
+## 🛠️ Como rodar o projeto localmente
 
-# ✨ Funcionalidades
+### Backend
+1. Navegue até `backend/TaskManagerAPI`.
+2. Configure a string de conexão do seu SQL Server no `appsettings.json`.
+3. Execute as migrations: `dotnet ef database update`.
+4. Rode a aplicação: `dotnet run`.
 
-## 🔐 Autenticação
-
-* ✅ Registro de usuários
-* ✅ Login com JWT
-* ✅ ASP.NET Identity
-* ✅ Controle de acesso por usuário autenticado
-
-## 📝 Gerenciamento de Tarefas
-
-* ✅ Criar tarefas
-* ✅ Listar tarefas
-* ✅ Editar tarefas
-* ✅ Excluir tarefas
-* ✅ Marcar tarefas como concluídas
-
-## 🏗️ Arquitetura
-
-* ✅ Separação em camadas (Application e Infrastructure)
-* ✅ Services e Interfaces
-* ✅ DTOs organizados por funcionalidade
-* ✅ Injeção de Dependência
-* ✅ Entity Framework Core (Code First)
+### Frontend
+1. Navegue até a pasta do frontend.
+2. Instale as dependências: `npm install`.
+3. Inicie o projeto: `npm start`.
 
 ---
-
-# 🛠️ Tecnologias Utilizadas
-
-## Backend
-
-* ASP.NET Core 8
-* Entity Framework Core 8
-* ASP.NET Identity
-* JWT Authentication
-* SQL Server
-
-## Frontend
-
-* React
-* TypeScript
-* Axios
-
----
-
-# 📂 Estrutura do Projeto
-
-```text
-TaskManager
-│
-├── backend
-│   └── TaskManagerAPI
-│       ├── Application
-│       │   ├── Interfaces
-│       │   └── Services
-│       │
-│       ├── Infrastructure
-│       │   ├── Interfaces
-│       │   └── Services
-│       │
-│       ├── Controllers
-│       ├── DTOs
-│       │   ├── Auth
-│       │   ├── Tasks
-│       │   └── Users
-│       │
-│       ├── Models
-│       └── Data
-│
-└── frontend
-    └── taskmanager-frontend
-```
-
----
-
-# 🚀 Como Executar o Projeto
-
-## Pré-requisitos
-
-* .NET 8 SDK
-* SQL Server
-* Node.js
-* Git
-
----
-
-## Backend
-
-```bash
-cd backend/TaskManagerAPI
-
-dotnet restore
-
-dotnet ef database update
-
-dotnet run
-```
-
-A API estará disponível em:
-
-```text
-https://localhost:7138
-```
-
----
-
-## Frontend
-
-```bash
-cd frontend/taskmanager-frontend
-
-npm install
-
-npm run dev
-```
-
-O frontend estará disponível em:
-
-```text
-http://localhost:5173
-```
-
----
-
-# 🎯 Conceitos Praticados
-
-* ASP.NET Core Web API
-* Entity Framework Core
-* SQL Server
-* ASP.NET Identity
-* JWT Authentication
-* React
-* TypeScript
-* Dependency Injection
-* Arquitetura em Camadas
-* CRUD Completo
-
----
-
-# 📈 Próximos Passos
-
-* [ ] Testes de Integração
-* [ ] Tratamento global de exceções
-* [ ] Logs estruturados
-* [ ] Refresh Token
-* [ ] Deploy da API
-* [ ] Deploy do Frontend
-* [ ] CI/CD com GitHub Actions
-
----
-
-# 👨‍💻 Autor
-
-**Sanzio Wesley Rodrigues dos Santos**
-
-GitHub: https://github.com/SanzioWesley
+## 🧠 Evolução Pessoal
+Este projeto representa minha transição para o desenvolvimento Full-Stack. Aprendi a integrar camadas complexas, gerenciar estados globais no React e garantir a segurança dos dados através do backend.
